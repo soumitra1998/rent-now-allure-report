@@ -20,7 +20,7 @@
         div.innerHTML = '';
         branches.forEach(b => {
           const a = document.createElement('a');
-          a.href = `./${b}/allure-report/index.html`;
+          a.href = `./${b}/index.html`;   // ✅ FIXED
           a.innerText = b;
           div.appendChild(a);
         });

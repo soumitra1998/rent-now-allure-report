@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Allure Reports</title>
+  <style>
+    body { font-family: Arial; padding: 40px; }
+    a { display: block; margin: 10px 0; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h1>Allure Reports</h1>
+  <div id="branches">Loading...</div>
+
+  <script>
+    fetch('./branches.json')
+      .then(res => res.json())
+      .then(branches => {
+        const div = document.getElementById('branches');
+        div.innerHTML = '';
+        branches.forEach(b => {
+          const a = document.createElement('a');
+          a.href = `./${b}/allure-report/index.html`;
+          a.innerText = b;
+          div.appendChild(a);
+        });
+      })
+      .catch(() => {
+        document.getElementById('branches').innerText = 'Failed to load branches';
+      });
+  </script>
+</body>
+</html>

@@ -1,32 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Allure Reports</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <style>
-    body { font-family: Arial; padding: 40px; }
-    a { display: block; margin: 10px 0; font-size: 18px; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Poppins", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1b2735, #090a0f);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #ff512f, #dd2476);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.75;
+      margin-bottom: 50px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      position: relative;
+      background: linear-gradient(145deg, #121212, #1c1c1c);
+      border-radius: 18px;
+      padding: 28px 22px;
+      text-decoration: none;
+      color: #fff;
+      box-shadow: 0 0 0 rgba(255, 80, 120, 0);
+      transition: all 0.4s ease;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent, rgba(255, 80, 120, 0.25), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 25px 60px rgba(255, 80, 120, 0.45);
+    }
+
+    .branch {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .tagline {
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+
+    .cta {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      color: #ff5f8f;
+      letter-spacing: 0.5px;
+    }
+
+    .loading, .error {
+      padding: 40px;
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    footer {
+      margin-top: 45px;
+      font-size: 0.85rem;
+      opacity: 0.5;
+    }
   </style>
 </head>
+
 <body>
-  <h1>Allure Reports</h1>
-  <div id="branches">Loading...</div>
+  <div class="container">
+    <h1>Allure Reports</h1>
+    <div class="subtitle">
+      Precision. Power. Proof.<br/>
+      Choose your branch — and face the truth.
+    </div>
+
+    <div id="content" class="loading">Awakening reports…</div>
+
+    <footer>
+      Generated with intent · Delivered by GitHub Actions
+    </footer>
+  </div>
 
   <script>
-    fetch('./branches.json')
+    fetch("./branches.json")
       .then(res => res.json())
       .then(branches => {
-        const div = document.getElementById('branches');
-        div.innerHTML = '';
+        const content = document.getElementById("content");
+
+        if (!branches.length) {
+          content.innerHTML = "<div class='error'>No reports yet. Silence before the storm.</div>";
+          return;
+        }
+
+        const grid = document.createElement("div");
+        grid.className = "grid";
+
         branches.forEach(b => {
-          const a = document.createElement('a');
-          a.href = `./${b}/index.html`;   // ✅ FIXED
-          a.innerText = b;
-          div.appendChild(a);
+          const card = document.createElement("a");
+          card.className = "card";
+          card.href = `./${b}/index.html`;
+
+          card.innerHTML = `
+            <div class="branch">🌑 ${b}</div>
+            <div class="tagline">Execution doesn’t lie</div>
+            <div class="cta">Enter report →</div>
+          `;
+
+          grid.appendChild(card);
         });
+
+        content.innerHTML = "";
+        content.appendChild(grid);
       })
       .catch(() => {
-        document.getElementById('branches').innerText = 'Failed to load branches';
+        document.getElementById("content").innerHTML =
+          "<div class='error'>Failed to summon reports</div>";
       });
   </script>
 </body>
